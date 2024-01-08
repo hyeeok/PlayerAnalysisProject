@@ -1,0 +1,29 @@
+/* src/pages/Home.css */
+.home-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.home-content {
+    text-align: center;
+}
+
+h2 {
+    color: #2980b9;
+    /* 파란색 톤 */
+}
+
+p {
+    font-size: 1.2rem;
+    margin: 20px 0;
+    color: #333;
+    /* 기본 텍스트 색상 */
+}
+
+.soccer-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px;
+}

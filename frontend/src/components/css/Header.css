@@ -1,0 +1,29 @@
+/* src/components/Header.css */
+h1 a {
+    text-decoration: none;
+    color: #1a5276;
+    /* 조절된 파란색 톤 */
+}
+
+header {
+    background-color: #2980b9;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #3498db;
+}
+
+a:hover {
+    color: #2c3e50;
+}
