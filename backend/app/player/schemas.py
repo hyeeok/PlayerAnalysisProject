@@ -10,6 +10,6 @@ class Player(BaseModel):
     current_team: str
     market_value: str
 
-class Player(BaseModel):
+class PlayerList(BaseModel):
     length: int
     data: List[Player]

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.player.routers import router as player_router
+from app.auth.routers import router as auth_router
 
 app = FastAPI(redoc_url=None)
 
@@ -22,3 +23,4 @@ app.add_middleware(
 )
 
 app.include_router(player_router)
+app.include_router(auth_router)

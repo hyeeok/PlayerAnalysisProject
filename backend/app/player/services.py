@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from backend.database.models import Player
+from database.models import Player
 from sqlalchemy import func
 
 def get_all_players(db: Session):
