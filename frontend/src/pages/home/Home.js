@@ -1,6 +1,6 @@
 import React from 'react';
-import './css/Home.css';
-import homeImage from './images/home.jpeg';
+import './Home.css';
+import homeImage from './Home.jpeg';
 function Home() {
     return (
         <div className="home-container">

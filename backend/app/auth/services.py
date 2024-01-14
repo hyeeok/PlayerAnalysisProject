@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 from .schemas import *
@@ -14,18 +15,38 @@ def hash_password(password: str, salt: str) -> str:
     hashed_password = bcrypt.hashpw(password.encode(), salt.encode())
     return hashed_password.decode()
 
-
-# id로 user_id 가져오기
-def fix_user_id(id: str, db: Session) -> str:
+#session_id -> user_id
+def get_user_id_by_session_id(session_id: str, db: Session):
     query = text(
         """
-            SELECT * FROM users 
-            WHERE id = :id
-            """
+        SELECT user_id FROM sessions WHERE session_id = :session_id
+        """
     )
-    user_id = db.execute(query, {"id": id}).scalar()
-    return user_id
+    
+    result = db.execute(query, {"session_id": session_id}).fetchone()
+    if result:
+        user_id = result[0]
+        return user_id
+    return None
 
+#세션 db 저장
+def save_session(user_session: UserSession, db: Session):
+    query = text(
+        """
+        INSERT INTO sessions (session_id, user_id, login_time)
+        VALUES (:session_id, :user_id, :login_time)
+        """
+    )
+    
+    db.execute(
+        query,
+        {
+            "session_id": user_session.session_id,
+            "user_id": user_session.id,
+            "login_time": datetime.utcnow(), 
+        },
+    )
+    db.commit()
 
 # 로그인
 def login_user(user: User, db: Session):
@@ -53,7 +74,6 @@ def login_user(user: User, db: Session):
     else:
         return None
 
-
 # 회원가입
 def register_user(profile_info: ProfileInfo, db: Session):
     try:
@@ -65,17 +85,24 @@ def register_user(profile_info: ProfileInfo, db: Session):
         )
         db.execute(query_1, {"id": profile_info.id})
 
-        # FK인 user_id를 얻기 위한
-        fk_user_id = fix_user_id(profile_info.id, db)
-
         query_2 = text(
+        """
+        SELECT user_id FROM users WHERE id = :id
+        """
+        )
+
+        # FK인 user_id를 얻기 위한
+        result = db.execute(query_2, {"id": profile_info.id}).fetchone()
+        fk_user_id = result[0]
+
+        query_3 = text(
             """
             INSERT INTO users_profile_info (user_id, address, phone_number)
             VALUES (:user_id, :address, :phone_number)
             """
         )
         db.execute(
-            query_2,
+            query_3,
             {
                 "user_id": fk_user_id,
                 "address": profile_info.address,
@@ -87,14 +114,14 @@ def register_user(profile_info: ProfileInfo, db: Session):
         salt = generate_salt()
         hashed_password = hash_password(profile_info.password, salt)
 
-        query_3 = text(
+        query_4 = text(
             """
             INSERT INTO users_security_info (user_id, password, salt)
             VALUES (:user_id, :password, :salt)
             """
         )
         db.execute(
-            query_3,
+            query_4,
             {
                 "user_id": fk_user_id,
                 "password": hashed_password,

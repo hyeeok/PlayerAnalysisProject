@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, DateTime, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from database.DBConn import Base
+from datetime import datetime
 
 class Player(Base):
     __tablename__ = "players"
@@ -39,3 +40,14 @@ class UserProfileInfo(Base):
 
 User.security_info = relationship("UserSecurityInfo", back_populates="user")
 User.profile_info = relationship("UserProfileInfo", back_populates="user")
+
+class Session(Base):
+    __tablename__ = "sessions"
+
+    session_id = Column(String, primary_key=True, index=True, unique=True)
+    user_id = Column(String, ForeignKey("users.id",ondelete="CASCADE"))
+    login_time = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="sessions")
+
+User.sessions = relationship("Session", back_populates="user")

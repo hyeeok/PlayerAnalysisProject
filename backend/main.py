@@ -16,7 +16,7 @@ origins = [
 # CORS 미들웨어 추가해 오리진 허용
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 허용할 출처 목록
+    allow_origins=origins,  # 허용할 출처 목록
     allow_credentials=True,  # 자격 증명 허용 여부
     allow_methods=["*"],  # 허용할 HTTP 메서드
     allow_headers=["*"],  # 허용할 HTTP 헤더

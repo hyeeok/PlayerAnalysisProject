@@ -1,0 +1,16 @@
+.container {
+    background-color: red;
+    max-width: 768px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu {
+    display: flex;
+    justify-content: space-evenly;
+}
