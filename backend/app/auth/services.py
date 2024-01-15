@@ -15,38 +15,6 @@ def hash_password(password: str, salt: str) -> str:
     hashed_password = bcrypt.hashpw(password.encode(), salt.encode())
     return hashed_password.decode()
 
-#session_id -> user_id
-def get_user_id_by_session_id(session_id: str, db: Session):
-    query = text(
-        """
-        SELECT user_id FROM sessions WHERE session_id = :session_id
-        """
-    )
-    
-    result = db.execute(query, {"session_id": session_id}).fetchone()
-    if result:
-        user_id = result[0]
-        return user_id
-    return None
-
-#세션 db 저장
-def save_session(user_session: UserSession, db: Session):
-    query = text(
-        """
-        INSERT INTO sessions (session_id, user_id, login_time)
-        VALUES (:session_id, :user_id, :login_time)
-        """
-    )
-    
-    db.execute(
-        query,
-        {
-            "session_id": user_session.session_id,
-            "user_id": user_session.id,
-            "login_time": datetime.utcnow(), 
-        },
-    )
-    db.commit()
 
 # 로그인
 def login_user(user: User, db: Session):

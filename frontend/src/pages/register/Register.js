@@ -1,4 +1,8 @@
+/* eslint-disable */
+
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './Register.module.css';
 
 function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -7,6 +11,8 @@ function RegisterForm() {
         address: '',
         phone_number: ''
     });
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -24,10 +30,16 @@ function RegisterForm() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                credentials: 'include'
             });
-            const data = await response.json();
-            console.log(data);
+
+            if (response.ok) {
+                navigate('/home', { replace: true });
+            } else {
+                const data = await response.text();
+                console.log(data);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -40,9 +52,9 @@ function RegisterForm() {
     };
 
     return (
-        <div>
+        <div className={styles.container}>
             <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={styles.form}>
                 <label>
                     Id:
                     <input
@@ -66,7 +78,7 @@ function RegisterForm() {
                 <br />
 
                 <label>
-                    Adress:
+                    Address:
                     <input
                         type="text"
                         name="address"
@@ -77,7 +89,7 @@ function RegisterForm() {
                 <br />
 
                 <label>
-                    Phone_number:
+                    Phone Number:
                     <input
                         type="text"
                         name="phone_number"
@@ -87,8 +99,7 @@ function RegisterForm() {
                     />
                 </label>
                 <br />
-
-                <button type="submit">등록</button>
+                <button type="submit" className={styles.button}>Register</button>
             </form>
         </div>
     );

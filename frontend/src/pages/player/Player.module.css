@@ -1,0 +1,13 @@
+.table-wrapper {
+    max-height: 600px; /* 원하는 높이로 조절하세요. */
+    overflow-y: auto;
+    overflow-x: hidden; /* 가로 스크롤을 감추기 */
+    margin: 0 auto; /* 페이지 가운데로 옮기기 */
+    display: flex; /* Flex 컨테이너로 변경 */
+    justify-content: flex-end; /* 왼쪽 정렬 */
+}
+
+/* 가운데로 옮겨지도록 수정 */
+.table-wrapper table {
+    margin-right: auto; /* 나머지 공간을 오른쪽으로 이동 */
+}

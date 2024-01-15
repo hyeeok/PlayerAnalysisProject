@@ -1,9 +1,11 @@
+/* eslint-disable */
+
 import React, { useState, useEffect } from 'react';
-import './Player.css';
+import styles from './Player.module.css';
 
 function Player() {
     const [players, setPlayers] = useState([]);
-    const [displayedPlayers, setDisplayedPlayers] = useState(50);
+    const [displayedPlayers, setDisplayedPlayers] = useState(500);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,49 +26,44 @@ function Player() {
         window.open(searchUrl, '_blank');
     };
 
-    const handleShowMoreClick = () => {
-        setDisplayedPlayers((prevDisplayedPlayers) => prevDisplayedPlayers + 50);
-    };
-
     return (
         <div>
             <h2>선수 목록</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>순위</th>
-                        <th>선수 이름</th>
-                        <th>포지션</th>
-                        <th>나이</th>
-                        <th>국적</th>
-                        <th>현 팀</th>
-                        <th>시장 가치</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {players.slice(0, displayedPlayers).map((player) => (
-                        <tr key={player.rank}>
-                            <td>{player.rank}</td>
-                            <td>
-                                <span
-                                    className="player-name-link"
-                                    onClick={() => handlePlayerNameClick(player.player_name)}
-                                >
-                                    {player.player_name}
-                                </span>
-                            </td>
-                            <td>{player.position}</td>
-                            <td>{player.age}</td>
-                            <td>{player.nationality}</td>
-                            <td>{player.current_team}</td>
-                            <td>{player.market_value}</td>
+            <div className={styles['table-wrapper']}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>순위</th>
+                            <th>선수 이름</th>
+                            <th>포지션</th>
+                            <th>나이</th>
+                            <th>국적</th>
+                            <th>현 팀</th>
+                            <th>시장 가치</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            {displayedPlayers < players.length && (
-                <button className="more-button" onClick={handleShowMoreClick}>더 보기</button>
-            )}
+                    </thead>
+                    <tbody>
+                        {players.slice(0, displayedPlayers).map((player) => (
+                            <tr key={player.rank}>
+                                <td>{player.rank}</td>
+                                <td>
+                                    <span
+                                        className={styles['player-name-link']}
+                                        onClick={() => handlePlayerNameClick(player.player_name)}
+                                    >
+                                        {player.player_name}
+                                    </span>
+                                </td>
+                                <td>{player.position}</td>
+                                <td>{player.age}</td>
+                                <td>{player.nationality}</td>
+                                <td>{player.current_team}</td>
+                                <td>{player.market_value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Cookie, Depends, HTTPException, Header, Response
+from fastapi import APIRouter, Body, Cookie, Depends, HTTPException, Header, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from database.DBConn import get_db
@@ -7,7 +7,10 @@ from .schemas import *
 import secrets
 from fastapi.security import OAuth2PasswordBearer
 
+import redis
+
 router = APIRouter(prefix="/auth")
+redis_client = redis.Redis(host='localhost', port=6379)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -15,30 +18,38 @@ def generate_session_id():
     session_id = secrets.token_hex(32)
     return session_id
 
-def get_session_id(session_id: str = Header(None)):
-    return session_id
+@router.post("/user_name")
+async def fetch_user_name(session_id: SessionId):
+    user_name = redis_client.get(session_id.session_id)  # Redis에서 세션 ID에 해당하는 사용자 이름 조회
+    if user_name is not None: 
+        return user_name.decode('utf-8')
+    else:
+        raise HTTPException(status_code=404, detail="사용자 이름을 찾을 수 없습니다.")
 
-@router.get("/header_login_info")
-async def login_info(session_id: str = Cookie(None), db: Session = Depends(get_db)):
-    result = services.get_user_id_by_session_id(session_id=session_id, db=db)
-    return {"user_id": result}
 
 @router.post("/logout")
-async def logout(response: Response):
-    response.delete_cookie("cookie_name")
-    return {"message": "로그아웃되었습니다."}
+async def logout_user(session_id: SessionId, response: Response):
+    try:
+        redis_client.delete(session_id.session_id)
+        response.delete_cookie("session_id")
+        return {"message": "로그아웃되었습니다."}
+    except Exception as e:
+        print(f"{str(e)}")
+        raise HTTPException(status_code=500, detail=f"세션 삭제 실패: {str(e)}")
+
 
 @router.post("/login", response_model=str)
-def login_user(user: User, session_id: str = Depends(get_session_id), db: Session = Depends(get_db)):
+def login_user(user: User, db: Session = Depends(get_db)):
     try:
         result = services.login_user(user, db=db)
         if result:
-            if session_id is None:
-                session_id = generate_session_id()  # 세션 식별자 생성
-                user_session = UserSession(session_id=session_id, id=user.id)
-                services.save_session(user_session, db)
+            # 세션 식별자 생성
+            session_id = generate_session_id()
 
-            response_data = {"message": "로그인 성공", "session_id": session_id}
+            # Redis에 세션 정보 저장
+            redis_client.set(session_id, result)
+
+            response_data = {"message": "로그인 성공", "session_id": session_id, "id": result}
             response = JSONResponse(content=response_data)
             response.set_cookie(key='session_id', value=session_id)
             return response
@@ -48,7 +59,6 @@ def login_user(user: User, session_id: str = Depends(get_session_id), db: Sessio
     except Exception as e:
         print(repr(e))
         raise e
-
 
 @router.post("/register", response_model=str)
 def register_user(profile_info: ProfileInfo, db: Session = Depends(get_db)):

@@ -8,7 +8,6 @@ import Player from './pages/player/Player';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Qa from "./pages/qa/Qa";
-import './App.css';
 
 const App = () => {
   return (

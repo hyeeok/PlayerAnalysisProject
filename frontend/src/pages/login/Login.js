@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './Login.module.css';
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -32,6 +33,7 @@ function Login() {
 
             if (response.ok) {
                 const data = await response.json();
+                console.log(data)
                 navigate('/home', { replace: true });
             } else {
                 const data = await response.text();
@@ -49,7 +51,7 @@ function Login() {
     };
 
     return (
-        <div>
+        <div className={styles['login-container']}>
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <label>
