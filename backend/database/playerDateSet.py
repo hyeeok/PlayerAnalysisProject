@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from backend.database.DBConn import get_db  
-from backend.database.models import Player
+from DBConn import get_db  
+from models import Player
 
 # 세션 인스턴스 직접 사용
 db = next(get_db())

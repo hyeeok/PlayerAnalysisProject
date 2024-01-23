@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from database.DBConn import Base
+from datetime import datetime
 
 class Player(Base):
     __tablename__ = "players"

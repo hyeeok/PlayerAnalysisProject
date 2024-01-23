@@ -9,3 +9,9 @@ class User(BaseModel):
 class ProfileInfo(User):
     address: str
     phone_number: str
+
+class SessionId(BaseModel):
+    session_id: str
+
+class UserId(BaseModel):
+    id: str
