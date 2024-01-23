@@ -1,13 +1,25 @@
+.wrap {
+    display: flex;
+    gap: 1.5rem;
+}
+
 .table-wrapper {
     max-height: 600px; /* 원하는 높이로 조절하세요. */
     overflow-y: auto;
     overflow-x: hidden; /* 가로 스크롤을 감추기 */
-    margin: 0 auto; /* 페이지 가운데로 옮기기 */
+    margin: right; /* 페이지 가운데로 옮기기 */
     display: flex; /* Flex 컨테이너로 변경 */
     justify-content: flex-end; /* 왼쪽 정렬 */
 }
 
-/* 가운데로 옮겨지도록 수정 */
 .table-wrapper table {
-    margin-right: auto; /* 나머지 공간을 오른쪽으로 이동 */
+    margin-right: auto;
+    width: 100%; /* 테이블이 부모 너비를 채우도록 설정 */
+    border-collapse: collapse; /* 테이블 셀 경계를 합침 */
+}
+
+/* 행에 호버 효과 추가 */
+.table-wrapper table tbody tr:hover {
+    background-color: #f2f2f2; /* 원하는 배경색으로 변경 */
+    cursor: pointer; /* 커서 모양 변경 */
 }

@@ -12,3 +12,6 @@ class ProfileInfo(User):
 
 class SessionId(BaseModel):
     session_id: str
+
+class UserId(BaseModel):
+    id: str

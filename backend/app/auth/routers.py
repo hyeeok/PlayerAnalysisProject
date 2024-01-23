@@ -18,7 +18,7 @@ def generate_session_id():
     session_id = secrets.token_hex(32)
     return session_id
 
-@router.post("/user_name")
+@router.post("/fetch_user_name")
 async def fetch_user_name(session_id: SessionId):
     user_name = redis_client.get(session_id.session_id)  # Redis에서 세션 ID에 해당하는 사용자 이름 조회
     if user_name is not None: 
@@ -83,3 +83,9 @@ def delete_user(user: User, db: Session = Depends(get_db)):
     except Exception as e:
         print(repr(e))
         raise e
+
+
+@router.post("/check_id")
+async def check_id_availability(id: UserId , db: Session = Depends(get_db)):
+    is_available = services.check_id_availability(id.id, db)
+    return {"available": is_available}

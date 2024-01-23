@@ -144,3 +144,18 @@ def delete_user(user: User, db: Session):
         print(repr(e))
         db.rollback()
         raise e
+
+
+def check_id_availability(id: str, db: Session):
+    query = text(
+        """
+        SELECT count(*) 
+        FROM users
+        WHERE id = :id
+        """
+    )
+    result = db.execute(query, {"id": id})
+    count = result.fetchone()[0]
+    return count == 0
+
+

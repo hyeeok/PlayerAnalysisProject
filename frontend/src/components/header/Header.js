@@ -28,7 +28,7 @@ const Header = () => {
 
     const fetchUserName = async (sessionId) => {
         try {
-            const response = await fetch('http://localhost:8000/auth/user_name', {
+            const response = await fetch('http://localhost:8000/auth/fetch_user_name', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,7 +40,6 @@ const Header = () => {
 
             if (response.ok) {
                 const userData = await response.json();
-                console.log(userData)
                 setUserName(userData);
             }
         } catch (error) {
