@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Body, Cookie, Depends, HTTPException, Header, Response
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from database.DBConn import get_db
@@ -6,10 +7,23 @@ from . import services
 from .schemas import *
 import secrets
 from fastapi.security import OAuth2PasswordBearer
-
+import random
 import redis
+import os
 
 router = APIRouter(prefix="/auth")
+
+conf = ConnectionConfig(
+    MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
+    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
+    MAIL_FROM=os.getenv("MAIL_FROM"),
+    MAIL_PORT=os.getenv("MAIL_PORT"),  
+    MAIL_SERVER=os.getenv("MAIL_SERVER"),
+    MAIL_STARTTLS=os.getenv("MAIL_STARTTLS"),
+    MAIL_SSL_TLS=os.getenv("MAIL_SSL_TLS"),
+    USE_CREDENTIALS=os.getenv("USE_CREDENTIALS")
+)
+
 redis_client = redis.Redis(host='localhost', port=6379)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -17,6 +31,23 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 def generate_session_id():
     session_id = secrets.token_hex(32)
     return session_id
+
+@router.post("/send_verification_code")
+async def send_verification_code(email: Email):
+    verification_code = ''.join(str(random.randint(0, 9)) for _ in range(6))
+    
+    message = MessageSchema(
+        subtype="plain",
+        subject="SPAP 본인인증코드",
+        recipients=[email.email],  
+        body=f"Verification code : {verification_code}"
+    )
+
+    fm = FastMail(conf)
+    await fm.send_message(message)
+
+    return verification_code
+
 
 @router.post("/fetch_user_name")
 async def fetch_user_name(session_id: SessionId):
