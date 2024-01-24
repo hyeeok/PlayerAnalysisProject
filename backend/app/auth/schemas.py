@@ -15,3 +15,6 @@ class SessionId(BaseModel):
 
 class UserId(BaseModel):
     id: str
+
+class Email(BaseModel):
+    email:str

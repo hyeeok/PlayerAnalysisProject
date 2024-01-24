@@ -13,14 +13,12 @@ function Login() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value
-        }));
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const response = await fetch('http://localhost:8000/auth/login', {
                 method: 'POST',
@@ -32,12 +30,20 @@ function Login() {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log(data)
                 navigate('/home', { replace: true });
             } else {
                 const data = await response.text();
-                console.log(data);
+                if (!formData.id) {
+                    alert('아이디를 입력하세요.');
+                    document.getElementsByName('id')[0].focus();
+                } else if (!formData.password) {
+                    alert('비밀번호를 입력하세요.');
+                    document.getElementsByName('password')[0].focus();
+                } else {
+                    alert('아이디가 존재하지 않거나 비밀번호가 틀렸습니다.');
+                    setFormData({ id: '', password: '' });
+                    document.getElementsByName('id')[0].focus();
+                }
             }
         } catch (error) {
             console.error(error);
@@ -61,6 +67,7 @@ function Login() {
                         name="id"
                         value={formData.id}
                         onChange={handleChange}
+                        autoFocus // Set autofocus on the Id input field
                     />
                 </label>
                 <br />
