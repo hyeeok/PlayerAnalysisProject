@@ -1,3 +1,4 @@
+import shutil
 import time
 import base64
 from selenium import webdriver
@@ -5,7 +6,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
-import requests
 from PIL import Image
 import io
 from DBConn import get_db  
@@ -17,9 +17,12 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 # 이미지를 저장할 폴더 경로를 만듭니다.
 image_folder_path = os.path.join(script_dir, "player_images")
 
-# 만약 폴더가 없다면 생성합니다.
-if not os.path.exists(image_folder_path):
-    os.makedirs(image_folder_path)
+# 만약 폴더가 이미 존재한다면 삭제합니다.
+if os.path.exists(image_folder_path):
+    shutil.rmtree(image_folder_path)
+
+# 폴더를 다시 생성합니다.
+os.makedirs(image_folder_path)
 
 # 세션 인스턴스 직접 사용
 db = next(get_db())
