@@ -15,14 +15,11 @@ DB의 경우, 사용자의 경험을 향상시킬 수 있도록 상황에 맞춰
 
 ### 사용 전 docker hub을 활용하여 이미지 가져오기
         docker pull hyeeok/spap:backend
-        docker pull hyeeok/spap:postgres-alpine
 
 1. 도커 컴포즈 파일 database 부분 환경 변수 설정 후, docker-compose up -d --build 를 활용하여 프로젝트 이미지 생성 및 컨테이너 생성
 
 2. alembic 을 활용하여 테이블 자동 생성
-   
-        #스크립트 생성
-        alembic revision --autogenerate -m "create all table”
+   -> alembic.ini 안의 sqlalchemy.url 사용자 설정 먼저 하기
    
         #DB로 테이블 정보 업데이트
         alembic upgrade head 
