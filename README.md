@@ -19,7 +19,7 @@ DB의 경우, 사용자의 경험을 향상시킬 수 있도록 상황에 맞춰
 1. 도커 컴포즈 파일 database 부분 환경 변수 설정 후, docker-compose up -d --build 를 활용하여 프로젝트 이미지 생성 및 컨테이너 생성
 
 2. alembic 을 활용하여 테이블 자동 생성
-   -> alembic.ini 안의 sqlalchemy.url 사용자 설정 먼저 하기
+   -> alembic.ini과 .env 안의 url 사용자 설정 먼저 하기 (localhost)
 
         alembic revision --autogenerate -m "create players table"
    
