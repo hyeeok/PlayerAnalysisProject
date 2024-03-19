@@ -20,8 +20,9 @@ DB의 경우, 사용자의 경험을 향상시킬 수 있도록 상황에 맞춰
 
 2. alembic 을 활용하여 테이블 자동 생성
    -> alembic.ini 안의 sqlalchemy.url 사용자 설정 먼저 하기
+
+        alembic revision --autogenerate -m "create players table"
    
-        #DB로 테이블 정보 업데이트
         alembic upgrade head 
 
 #크롤링 전에 models.py 의 3번 줄 수정
